@@ -144,7 +144,7 @@ def main(args):
     # all_node_embedding_: 26989*500;  # G1_node_embedding_: [0]:911*500     [1]:106*500    [2]:8948*500 # G2_node_embedding_: 26078*500;
     G1_graph_sub2_new, en_index_G3_list_train_bef, en_index_G3_list_test_bef, en_index_G3_list_train, en_index_G3_list_test, G2_edge_index_, all_node_embedding_, G1_node_embedding_, G2_node_embedding_, data_G1, data_G2, data_G1_val, data_G1_test, data_G2_val, data_G2_test, en_embedding_G3,en_embedding_G3_train,en_embedding_G3_test = pre_load_data(args)
 
-    print("for debug")
+    print("... ...for debug enter main funciton")
 
     # device = torch.device('cuda' if torch.cuda.is_available() else'cpu')
 
@@ -156,8 +156,8 @@ def main(args):
     model.train()
     for epoch in range(20):
         for batch in range(10):
+            print("... ...for debug beginning a batch")
             optimizer.zero_grad()
-
             data_G2_mini = get_mini_g2(G2_edge_index_, data_G2.edge_attr, data_G2.edge_type, args.select_num, data_G2.x)
             out_G3 = model(data_G1, data_G2_mini)
             train_subset_of_out_G3_train = torch.index_select(  # 6178*500 embedding
@@ -175,25 +175,17 @@ def main(args):
 
             target = target_tmp
             loss = F.binary_cross_entropy(train_subset_of_out_G3_train, target)
-            # print('loss:{}'.format(loss))
-
-            # em_check = torch.mean((data_G2.x)**2)
-            # print('em_mean_before_loss_backward:{}'.format(em_check))
-
+            print('loss:{}'.format(loss))
             loss.backward()  # 误差反向传播计算参数梯度
-            # em_check = torch.mean((data_G2.x)**2)
-            # print('em_mean_after_loss_backward:{}'.format(em_check))
-
             optimizer.step()  # 通过梯度 做参数更新
-            # em_check = torch.mean((data_G2.x)**2)
-            # print('em_mean_after_optimizer_step:{}'.format(em_check))
-            print("for debug...")
+            print("... ...for debug finished a batch")
 
     # test
+    print("... ...for debug beginning test")
     model.eval()
     out_test = model(data_G1, data_G2)
     train_subset_of_out_G3_test = torch.index_select(  # 1544*106 embedding
-        out_G3,
+        out_test,
         dim=0,
         index=en_index_G3_list_test
     )
@@ -216,6 +208,7 @@ def main(args):
     final_acc = all_acc/train_subset_of_out_G3_test.shape[0]
 
     print(final_acc)
+    print("... ...for debug finished test")
 
 if __name__ == '__main__':
     main(parse_args())
