@@ -16,11 +16,12 @@ def load_da(data_path, data_path_bef):
 
     # relation2id_G2_re  34
     relation2id_G2 = OrderedDict()
+    relation2id_G2_re = OrderedDict()
     with open(os.path.join(data_path, 'ffinal_en_relation_order.txt')) as fin:  # 34
         for line in fin:
             rid, relation = line.strip().split('\t')
             relation2id_G2[rid] = relation
-    relation2id_G2_re = {v: k for k, v in relation2id_G2.items()}
+            relation2id_G2_re[relation] = rid
 
 
     # type_node2id_G1_re   911

@@ -25,6 +25,7 @@ def parse_args(args=None):
     parser.add_argument('--G2_val_file_name', type=str, default="val_entity_Graph.txt")
     parser.add_argument('--G2_test_file_name', type=str, default="test_entity_Graph.txt")
 
+    parser.add_argument('--l_rate', type=float, default=0.001)
     parser.add_argument('--dim', type=int, default=500)
     parser.add_argument('--in_dim', type=int, default=500)
     parser.add_argument('--out_dim', type=int, default=500)
@@ -32,6 +33,9 @@ def parse_args(args=None):
     parser.add_argument('--class_num_double', type=int, default=200)
     parser.add_argument('--select_num', type=int, default=70000)
     parser.add_argument('--leaf_node_entity', action='store_true', default=True)
+    parser.add_argument('--cuda', action='store_true', default=True)
+
+
 
     return parser.parse_args(args)
 
@@ -149,7 +153,7 @@ def main(args):
     # device = torch.device('cuda' if torch.cuda.is_available() else'cpu')
 
     model = Net(args, data_G2)
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.l_rate, weight_decay=5e-4)
 
 
 
